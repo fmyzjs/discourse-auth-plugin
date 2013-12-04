@@ -67,11 +67,11 @@ auth_provider :title => 'with Bistu',
 
 register_css <<CSS
 
-.btn-social.Bistu {
+.btn-social.bistu {
   background: #dd4814;
 }
 
-.btn-social.Bistu:before {
+.btn-social.bistu:before {
   font-family: Ubuntu;
   content: "B";
 }
