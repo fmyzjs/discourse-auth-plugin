@@ -1,7 +1,7 @@
 # name: bistuoauth
-# about: Authenticate with discourse via ExistingSite's Oauth
+# about: Authenticate with discourse via Bistu's Oauth
 # version: 0.2.0
-# authors: Michael Kirk
+# authors: Jason Zhu
 
 require 'auth/oauth2_authenticator'
 
