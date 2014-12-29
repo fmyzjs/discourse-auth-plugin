@@ -16,7 +16,7 @@ class BistuAuthenticator < ::Auth::Authenticator
 
     data = auth_token[:info]
     raw_info = auth_token[:extra][:raw_info]
-    bistu_uid = data["userName"]
+    bistu_uid = auth_token[:uid]
 
     current_info = ::PluginStore.get('bistu', "bistu_uid_#{bistu_uid}")
 
