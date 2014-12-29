@@ -1,0 +1,5 @@
+login:
+  bistu_client_id:
+    default: ''
+  bistu_client_secret:
+    default: ''

@@ -1,0 +1,6 @@
+# encoding: utf-8
+
+en:
+  site_settings:
+    bistu_client_id: "Client id for Bistu authentication, registered at https://auth.bistu.edu.cn/"
+    bistu_client_secret: "Client secret for Bistu authentication, registered at https://auth.bistu.edu.cn/"

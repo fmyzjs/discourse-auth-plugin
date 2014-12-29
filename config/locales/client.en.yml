@@ -1,0 +1,8 @@
+# encoding: utf-8
+
+en:
+  js:
+    login:
+      bistu:
+        title: "with Bistu"
+        message: "Authenticating with Bistu (make sure pop up blockers are not enabled)"

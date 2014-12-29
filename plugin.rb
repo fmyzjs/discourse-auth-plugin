@@ -1,79 +1,63 @@
-# name: bistuoauth
-# about: Authenticate with discourse via Bistu's Oauth
-# version: 0.2.0
-# authors: Jason Zhu
+# name: Bistu login
+# about: Authenticate with discourse with bistu.
+# version: 0.1.0
+# author: Jason Zhu
 
-require 'auth/oauth2_authenticator'
+gem 'omniauth-bistu',:git => 'https://github.com/fmyzjs/omniauth-bistu.git'
 
-class BistuAuthenticator < ::Auth::OAuth2Authenticator
+class BistuAuthenticator < ::Auth::Authenticator
 
-  CLIENT_ID = 'ASDFASDF'
-  CLIENT_SECRET = 'ASDF1234'
+  def name
+    'bistu'
+  end
+
+  def after_authenticate(auth_token)
+    result = Auth::Result.new
+
+    data = auth_token[:info]
+    raw_info = auth_token[:extra][:raw_info]
+    bistu_uid = data["userName"]
+
+    current_info = ::PluginStore.get('bistu', "bistu_uid_#{bistu_uid}")
+
+    result.user =
+      if current_info
+        User.where(id: current_info[:user_id]).first
+      end
+
+    result.name = data["realName"]
+    result.username = data["userName"]
+    result.email = data["email"]
+    result.extra_data = { bistu_uid: bistu_uid, raw_info: raw_info }
+
+    result
+  end
+
+  def after_create_account(user, auth)
+    bistu_uid = auth[:extra_data][:uid]
+    ::PluginStore.set('bistu', "bistu_uid_#{bistu_uid}", {user_id: user.id})
+  end
 
   def register_middleware(omniauth)
-    omniauth.provider :bistu,
-      CLIENT_ID,
-      CLIENT_SECRET
+    omniauth.provider :bistu, :setup => lambda { |env|
+      strategy = env['omniauth.strategy']
+      strategy.options[:client_id] = SiteSetting.bistu_client_id
+      strategy.options[:client_secret] = SiteSetting.bistu_client_secret
+    }
   end
 end
 
-# require 'omniauth-oauth2'
-# class OmniAuth::Strategies::BistuOauth < OmniAuth::Strategies::OAuth2
-
-#   # NOTE VM has to be able to resolve
-  
-
-#   # Give your strategy a name.
-#   option :name, "bistu"
-
-#   # This is where you pass the options you would pass when
-#   # initializing your consumer from the OAuth gem.
-#   option :client_options, {
-#     :site => 'http://222.249.250.234/bistuapi/',
-#     :authorize_url => 'http://222.249.250.234/o/authorize/',
-#     :token_url => 'http://222.249.250.234/o/token/'
-#   }
-
-#   # These are called after authentication has succeeded. If
-#   # possible, you should try to set the UID without making
-#   # additional calls (if the user id is returned with the token
-#   # or as a URI parameter). This may not be possible with all
-#   # providers.
-#   uid{ raw_info['id'] }
-
-#   info do
-#     {
-#       :name => raw_info['username'],
-#       :user => raw_info['userid'],
-
-#     }
-#   end
-
-#   extra do
-#     {'raw_info' => raw_info}
-#   end
-
-#   def raw_info
-#     @raw_info ||= access_token.get('/bistuapi/me/').parsed
-#   end
-# end
-
-
-auth_provider :title => 'with Bistu',
-    :message => 'Log in via the main site (Make sure pop up blockers are not enbaled).',
-    :frame_width => 920,
-    :frame_height => 800,
-    :authenticator => BistuAuthenticator.new('bistu', trusted: true)
+auth_provider :frame_width => 920,
+              :frame_height => 800,
+              :authenticator => BistuAuthenticator.new,
+              :background_color => 'rgb(230, 22, 45)'
 
 register_css <<CSS
 
-.btn-social.bistu {
-  background: #dd4814;
-}
-
 .btn-social.bistu:before {
   font-family: Ubuntu;
-  content: "B";
+  content: "信";
 }
+
 
 CSS

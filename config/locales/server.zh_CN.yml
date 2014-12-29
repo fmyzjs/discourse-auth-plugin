@@ -1,0 +1,6 @@
+# encoding: utf-8
+
+zh_CN:
+  site_settings:
+    bistu_client_id: "北信科帐号验证的客户端帐号（Client id），到 https://auth.bistu.edu.cn/ 来注册获取"
+    bistu_client_secret: "北信科帐号验证的客户端密码（Client secret），到 https://auth.bistu.edu.cn/ 来注册获取"
