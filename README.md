@@ -1,9 +1,9 @@
-discourse oauth plugin 
-----------------------
+Discourse Bistu Auth plugin 
+===========================
 
 
 Install:
-========
+--------
 
 ```shell
 
